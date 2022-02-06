@@ -5,65 +5,83 @@
 
 
 var http = require('http');
-var fs = require('fs');
+//var fs = require('fs');
 let url = require('url');
+const mod = require('./modules/things');
+
+
+var dict = {
+    "book": "useful thing",
+    "paper": "trees",
+    "phone": "photons"
+};
+
+function getDifinishio(word_to_compare) {
+
+    if (word_to_compare in dict) {
+        console.log("worrrrrd", word_to_compare + " -> " + dict[word_to_compare]);
+        return dict[word_to_compare];
+    }
+    else {
+        return "NO match";
+    }
+}
+
+
+function addDifinishio(word_to_compare, difiniion) {
+
+    if (!(word_to_compare in dict)) {
+        dict[word_to_compare] = difiniion;
+        return "succes";
+    }
+    else {
+        return "already exist";
+    }
+
+    // for (var key of Object.keys(dict)) {
+    //     //if (key == "paper") {
+    //     console.log("worrrrrd", key + " -> " + dict[key])
+    //     //}
+    // }
+}
 
 var server = http.createServer(function (req, res) {
 
     let q = url.parse(req.url, true);
 
-
     if (req.method === "GET") {
 
-      //  res.writeHead(200, {"Content-Type": "text/html"});
-      //  res.end('<b style="color:blue;">' + 'Hello ' + q.query["name"] + ', What a beautiful day. Server current date and time is ' + mo.getDate() + '</b>');
+        let word = q.query["word"];
+
+        let match = getDifinishio(word);
+
+        res.writeHead(200, { "Content-Type": "application/json" });
+        //set the response
+        res.write(match);
+        //end the response
+        res.end();
+    }
 
 
-        // res.writeHead(200, { "Content-Type": "text/html" });
-        // fs.createReadStream("./index.html", "UTF-8").pipe(res);
-        // res.writeHead(200, { "Content-Type": "application/json" });
-        // //set the response
-        // res.write("Hi there, This is a Vanilla Node.js API");
-        // //end the response
-        // res.end();
-    } else if (req.method === "POST") {
-    
-        console.log(q.query);
+    else if (req.method === "POST") {
 
         var body = "";
         req.on("data", function (chunk) {
-            body += chunk;
+            body += chunk.toString();
         });
 
-        req.on("end", function(){
-            res.writeHead(200, { "Content-Type": "text/html" });
-            res.end(body);
+        req.on("end", function () {
+            const { word, difinition } = JSON.parse(body);
+            console.log(word, difinition);
+            let match = addDifinishio(word, difinition);
+
+            res.writeHead(200, { "Content-Type": "application/json" });
+            //set the response
+            res.write(match);
+            //end the response
+            res.end();
         });
     }
 
 }).listen(3000);
-
 console.log("listening on localhost:3000");
-
-// at your browser address bar, try
-// http://localhost:3000/?name=Manreet,Fadi
-
-
-
-// let http = require('http');
-// let url = require('url');
-// const mo = require('./modules/utils');
-
-// http.createServer(function(req, res) {
-//     let q = url.parse(req.url, true);
-
-//     console.log(q.query,"\n");
-//     console.log(mo.getDate());
-
-//     res.writeHead(200, {"Content-Type": "text/html"});
-//     res.end('<b style="color:blue;">' + 'Hello ' + q.query["name"] + ', What a beautiful day. Server current date and time is ' + mo.getDate() + '</b>');
-// }).listen(8887);
-// console.log("listening on localhost:8887");
-
-// // at your browser address bar, try
-// // http://localhost:8887/?name=Manreet,Fadi
