@@ -27,10 +27,10 @@ function getDifinishio(word_to_compare) {
 }
 
 
-function addDifinishio(word_to_compare, difiniion) {
+function addDifinishio(word_to_compare, definition) {
 
     if (!(word_to_compare in dict)) {
-        dict[word_to_compare] = difiniion;
+        dict[word_to_compare] = definition;
         return "succes";
     }
     else {
@@ -70,9 +70,8 @@ var server = http.createServer(function (req, res) {
         });
 
         req.on("end", function () {
-            const { word, difinition } = JSON.parse(body);
-            console.log(word, difinition);
-            let match = addDifinishio(word, difinition);
+            const { word, definition } = JSON.parse(body);
+            let match = addDifinishio(word, definition);
 
             res.writeHead(200, { "Content-Type": "application/json" });
             //set the response
