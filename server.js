@@ -7,7 +7,7 @@
 var http = require('http');
 //var fs = require('fs');
 let url = require('url');
-const mod = require('./modules/things');
+//const mod = require('./modules/things');
 
 
 var dict = {
@@ -19,7 +19,6 @@ var dict = {
 function getDifinishio(word_to_compare) {
 
     if (word_to_compare in dict) {
-        console.log("worrrrrd", word_to_compare + " -> " + dict[word_to_compare]);
         return dict[word_to_compare];
     }
     else {
