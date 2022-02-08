@@ -1,0 +1,76 @@
+<html>
+
+<head>
+    <title>store</title>
+    <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
+</head>
+
+<body>
+    <h1>Store</h1>
+    <label>Enter word: </label>
+    <input type="text" id="inputWord" name="input word">
+    <br /><br />
+    <label>Definition: </label>
+    <textarea id="inputDefinition" rows="4" cols="30"></textarea>
+    <br /><br />
+    <button type="button" onclick="post()">submit</button>
+    <br /><br />
+    <label>Feedback:</label>
+    <p id="feedback"></p>
+    <br /></br></br>
+    <a href="search.html">
+        <button type="button">Go to search page</button>
+    </a>
+
+    <script>
+        // function post() {
+        //     var xhttp = new XMLHttpRequest();
+        //     var url = 'http://lab4.hostmatching.com';
+        //     const word = document.getElementById("inputWord").value;
+        //     const definition = document.getElementById("inputDefinition").value;
+        //     xhttp.open('POST', url, true);
+
+
+        //     const json = {
+        //         "word": `${word}`,
+        //         "definition": `${definition}`
+        //     };
+
+        //     const jsStr = JSON.stringify(json);
+
+        //     //Send the proper header information along with the request
+        //     xhttp.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+        //     xhttp.send(jsStr);
+
+        //     xhttp.onreadystatechange = function () { //Call a function when the state changes.
+        //         if (this.readyState == 4 && this.status == 200) {
+        //             document.getElementById("feedback").value = this.responseText;
+        //         }
+        //     }
+        // }
+        function post() {
+            const xhr = new XMLHttpRequest();
+            xhr.onload = () => {
+
+                // print JSON response
+                if (xhr.status >= 200 && xhr.status < 300) {
+                    const response = JSON.parse(xhr.responseText);
+                    console.log(response);
+                }
+            };
+
+            const json = {
+                "word": "eve.holt@reqres.in",
+                "definition": "cityslicka"
+            };
+
+            xhr.open('POST', 'https://d3dc5368-ecca-4806-8dc5-e120b15c0d4e.mock.pstmn.io');
+
+            xhr.setRequestHeader('Content-Type', 'application/json');
+
+            xhr.send(JSON.stringify(json));
+        }
+    </script>
+</body>
+
+</html>

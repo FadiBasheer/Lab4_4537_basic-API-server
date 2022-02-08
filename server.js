@@ -1,60 +1,65 @@
-// Node.js: HTTP SERVER Handling GET and POST Request 
-// Show HTML Form at GET request.
-// At POST Request: Grab form data and display them.
-// Get Complete Source Code from Pabbly.com
-
 
 var http = require('http');
-//var fs = require('fs');
 let url = require('url');
-//const mod = require('./modules/things');
 
-
-var dict = {
+var dictionary = {
     "book": "useful thing",
     "paper": "trees",
     "phone": "photons"
 };
 
-function getDifinishio(word_to_compare) {
+function getDifinishio(word_to_compare,request_num) {
 
-    if (word_to_compare in dict) {
-        return dict[word_to_compare];
+    if (word_to_compare in dictionary) {
+        return dictionary[word_to_compare];
     }
     else {
-        return "NO match";
+        return "Request# "+request_num+"\nWord '"+word_to_compare+"' not found!";
     }
 }
 
-
-function addDifinishio(word_to_compare, definition) {
-
-    if (!(word_to_compare in dict)) {
-        dict[word_to_compare] = definition;
-        return "succes";
+function stringContainsNumber(_string){
+  let matchPattern =_string.match(/\d+/g);
+  if (matchPattern != null) {
+    return false;
+   }
+  else{
+      return true;
     }
-    else {
-        return "already exist";
-    }
-
-    // for (var key of Object.keys(dict)) {
-    //     //if (key == "paper") {
-    //     console.log("worrrrrd", key + " -> " + dict[key])
-    //     //}
-    // }
 }
+
+function addDifinishio(word_to_compare, definition,request_num) {
+
+    if(stringContainsNumber(word_to_compare)){
+        if (!(word_to_compare in dictionary)) {
+            dictionary[word_to_compare] = definition;
+
+            return "Request #"+request_num+"\nNew entry recorded:\n"+word_to_compare+" : "+definition;
+        }
+        else {
+            return "already exist";
+        }
+    }
+    else{
+        return "Thw word can not be empty or contain numbers";
+    }
+}
+
+let request_num=0;
 
 var server = http.createServer(function (req, res) {
 
     let q = url.parse(req.url, true);
+    request_num++;
 
     if (req.method === "GET") {
 
         let word = q.query["word"];
 
-        let match = getDifinishio(word);
+        let match = getDifinishio(word,request_num);
 
-        res.writeHead(200, { "Content-Type": "application/json" });
+        res.writeHead(200, { "Content-Type": "application/json",
+        "Access-Control-Allow-Origin": "*" });
         //set the response
         res.write(match);
         //end the response
@@ -71,9 +76,10 @@ var server = http.createServer(function (req, res) {
 
         req.on("end", function () {
             const { word, definition } = JSON.parse(body);
-            let match = addDifinishio(word, definition);
+            let match = addDifinishio(word, definition,request_num);
 
-            res.writeHead(200, { "Content-Type": "application/json" });
+            res.writeHead(200, { "Content-Type": "application/json",
+            "Access-Control-Allow-Origin": "*" });
             //set the response
             res.write(match);
             //end the response

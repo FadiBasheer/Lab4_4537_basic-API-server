@@ -1,0 +1,40 @@
+
+<!DOCTYPE html>
+<html>
+
+<body>
+    <h1>Search</h1>
+    <div id="demo">
+        <label>Your Word: </label>
+        <input type="text" id="inputWord" name="input word">
+        <button type="button" onclick="get()">Search</button>
+        <br /><br />
+
+        <label>Definition: </label>
+        <textarea id="response" rows="4" cols="30"></textarea>
+        <br /><br />
+    </div>
+
+    <script>
+        function get() {
+
+            const endPointRoot = "http://lab4.hostmatching.com/";
+            const word = document.getElementById("inputWord").value;
+
+            const params = `?word=${word}`;
+            const url = endPointRoot + params;
+
+            var xhttp = new XMLHttpRequest();
+            xhttp.onreadystatechange = function () {
+                if (this.readyState == 4 && this.status == 200) {
+                    document.getElementById("response").value = this.responseText;
+                }
+            };
+            xhttp.open("GET", url, true);
+            xhttp.send();
+        }
+    </script>
+
+</body>
+
+</html>
